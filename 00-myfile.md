@@ -1080,6 +1080,11 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
 
   -  第3步：记事本打开id_rsa.pub文件，复制里面的内容添加到ssh key
 
+  - 第4步：检测Github的SSH key是否配置成功：
+
+    - 打开git Bash，输入如下的命令并回车执行`ssh -T git@github.com`
+    - 上述的命令执行成功后，可能会看到`...continue connecting(yes/no)?`输入yes后，如果能看到类似`Hi username!you've successfully authenticated...provide shell access.`证明SSH key配置成功
+
   - 在github新建仓库
 
   - 在本地创建的仓库提交
