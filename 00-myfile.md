@@ -1078,6 +1078,8 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
 
   -  第2步：登陆GitHub，打开“Account settings”，“SSH Keys”页面：添加ssh key
 
+  -  第3步：记事本打开id_rsa.pub文件，复制里面的内容添加到ssh key
+
   - 在github新建仓库
 
   - 在本地创建的仓库提交
