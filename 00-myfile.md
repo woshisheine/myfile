@@ -1,4 +1,33 @@
-# 一、Pycharm
+# idea
+
+#### springboot服务面板
+
+2019.3：View->Tool Windows->Services
+
+2019.2：View->Tool Windows->Run DashBoard
+
+但是有时候你可能没有2019.3没有Services 或者2019.2没有 Run Dashboard这个选项.那么就需要我们去改配置了。
+在项目中找到：workspace.xml
+
+找到`<component name="RunDashboard">`标签.在这个标签下添加如下代码
+
+```xml
+<option name="configurationTypes">
+    <set>
+        <option value="SpringBootApplicationConfigurationType" />
+    </set>
+</option>
+```
+
+
+
+# windows删除进程
+
+1. netstat -ano | findstr "端口" 》获取pid
+2. tasklist | findstr "pid" 》获取是什么服务占用（可用任务管理器）
+3. taskkill  /PID 53176 -T -F (其中-T是包括了子进程，-F是强制)， 通过pid结束该进程。
+
+一、Pycharm
 
 1. 写模板文件时用模板标签不能自动补全
 
@@ -42,7 +71,49 @@
 | Browser Preview       | 网页预览                                    |
 | Live Server           | 开启本地服务器                              |
 | Vetur                 | Vue文件语法高亮                             |
+| prettier              | 自动格式化（需配置）                        |
 |                       |                                             |
+
+### vscode中vue文件自动格式化
+
+- http://events.jianshu.io/p/8a7553db8311
+
+1. 第一步，打开设置，ctrl+,
+
+2. 第二步，接下来先设定自动保存文件，搜索框贴入files.autoSave筛出设置项，并把设置项属性选择为onFocuschange。
+
+3. 第三步，设定编辑器默认代码格式化（美化）的插件为Prettier，同理在搜索设置框贴入editor.defaultFormatter，将配置项选择为Prettier（需安装插件）。
+
+4. 第四步，设定Prettier插件保存时自动格式化代码，搜索设置项贴入editor.formatOnSave，将如下图所示的选项框打钩即可。
+
+5. # 注意，注意，注意
+
+6. 这样的效果是全局的，会使所有的文件都用这格式化，如果开启了其他项目，容易格式化冲突，
+   打开你的setting.json,找到刚才的编辑设置，如下
+
+7. ```
+   "editor.defaultFormatter": "esbenp.prettier-vscode"
+   ```
+
+8. 修改为
+
+9. ```
+   "[vue]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+     },
+   ```
+
+
+
+
+
+1. 
+
+
+
+
+
+
 
 # python
 
@@ -291,8 +362,8 @@
 
     - 边界
 
-      - `$`：以某某开头
-      - `^`：以某某结束
+      - `$`：以某某结束
+      - `^`：以某某开头
 
     - 分组：(ab)
 
@@ -472,16 +543,16 @@
 - 安装：
   - mysql 5.7 压缩包安装教程：https://www.cnblogs.com/misscai/p/11026987.html
   - mysql 5.7.24 安装包安装教程：https://blog.csdn.net/weixin_44051608/article/details/85163823
-  
+
 - 查看MySQL服务是否启动：
   - windows：
     - 键盘上按：win（就是那个旗帜图案的按键）+R，弹出框中输入：services.msc，会弹出服务窗口，在窗口中查找mysql项即可
   - linux： service mysqld status
-  
+
 - 启动MySQL服务(管理员方式启动)：
-  
+
 - mysql的bin目录下打开cmd，命令 net start mysql （对应的服务关闭命令为 net stop mysql） 
-  
+
 - 禁用MySQL服务：` sc delete mysql `
 
 - 删除MySQL服务：`mysqld --remove`
@@ -518,7 +589,47 @@
 
     ```mysql
     mysql> ALTER USER USER() IDENTIFIED BY 'Xiaoming250';
+    
     ```
+
+  mysql压缩包安装
+
+  1. 在mysql安装目录创建my.ini，内容如下
+
+  ```[mysql]
+  [mysql]
+  # 设置mysql客户端默认字符集
+  default-character-set=utf8 
+  [mysqld]
+  #设置3306端口
+  port = 3306 
+  # 设置mysql的安装目录
+  basedir=F:\phoneMall\mysql-5.7.26-winx64 
+  # 设置mysql数据库的数据的存放目录
+  datadir=F:\phoneMall\mysql-5.7.26-winx64\data
+  # 允许最大连接数
+  max_connections=200
+  # 服务端使用的字符集默认为8比特编码的latin1字符集
+  character-set-server=utf8
+  # 创建新表时将使用的默认存储引擎
+  default-storage-engine=INNODB
+  skip-grant-tables
+  ```
+
+  2. bin目录添加环境变量
+  3. 用管理员打开命令窗口，切换到mysql的bin目录
+     1. 输入mysqld --initialize(如果此处报错，将my.ini文件的basedir和datadir路径加引号和双斜杠)
+        - 注意：如果出现：由于找不到MSVCP120.dll,无法继续执行代码。。等问题，下载链接如下
+        - https://www.microsoft.com/zh-CN/download/details.aspx?id=40784
+     2. 输入mysqld --install(显示Service successfully installed)
+     3. 输入net start mysql启动服务
+     4. 输入mysql进入数据库
+     5. 输入use mysql
+     6. 输入update mysql.user set authentication_string=password('123456') where user='root';       设置数据库密码  适用于mysql 5.7版本
+     7. 将修改 mysql中的 my.ini文件  删掉最后一行的代码（跳过表验证）skip-grant-tables
+     8. 重启服务（要切换到mysql的bin目录！！！！！！！！）
+        1. net stop mysql
+        2. net start mysql
 
 ### 编码问题
 
@@ -722,6 +833,8 @@ alter table tb_books change name name varchar(20) character  set  utf8 not null;
   ```
 
 # nvm(Node Version Manager)安装的Node
+
+低版本10.16.3
 
 - 目前发现 8.11以上版本的node版本对应的npm都没法自动安装，
   需要自己到npm官网( https://npm.taobao.org/mirrors/npm/)
@@ -1049,7 +1162,7 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
 
 - #### 删除文件
 
--  现在你有两个选择
+- 现在你有两个选择
 
   - 一是确实要从版本库中删除该文件，那就用命令`git rm`删掉，并且`git commit`： 
 
@@ -1073,12 +1186,12 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
   - 第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有`id_rsa`和`id_rsa.pub`这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：
 
     ```
-    $ ssh-keygen -t rsa -C "youremail@example.com"
+    ssh-keygen -t rsa -C "youremail@example.com"
     ```
 
-  -  第2步：登陆GitHub，打开“Account settings”，“SSH Keys”页面：添加ssh key
+  - 第2步：登陆GitHub，打开“Account settings”，“SSH Keys”页面：添加ssh key
 
-  -  第3步：记事本打开id_rsa.pub文件，复制里面的内容添加到ssh key
+  - 第3步：记事本打开id_rsa.pub文件，复制里面的内容添加到ssh key
 
   - 第4步：检测Github的SSH key是否配置成功：
 
@@ -1091,14 +1204,22 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
 
   - 关联远程库：`git remote add origin git@github.com:用户名/learngit.git`
 
-  -  添加后，远程库的名字就是`origin`，这是Git默认的叫法，也可以改成别的，但是`origin`这个名字一看就知道是远程库。 
+  - 添加后，远程库的名字就是`origin`，这是Git默认的叫法，也可以改成别的，但是`origin`这个名字一看就知道是远程库。 
 
   - 把本地库的内容推送到远程，用`git push`命令，实际上是把当前分支`master`推送到远程。
 
     由于远程库是空的，我们第一次推送`master`分支时，加上了`-u`参数，Git不但会把本地的`master`分支内容推送的远程新的`master`分支，还会把本地的`master`分支和远程的`master`分支关联起来，在以后的推送或者拉取时就可以简化命令。
-    
-    查看远程地址：`git remote -v`
-    
+
+    - 将本地分支推送到远程分支:`git push -u 远程仓库的别名 本地分支的名称[:远程分支的名称，别名]`(第一次提交分支带-u，第二、三次直接git push)
+
+    - 查看远程分支中所有的分支列表：`git remote show 远程仓库名称`
+
+    - 跟踪分支：从远程仓库中，把远程分支下载到本地仓库。`git checkout 远程分支的名称`，分支重命名：`git checkout -b 本地分支名称 远程仓库名称/远程分支名称`
+    - 拉取远程分支最新代码：`git pull `
+    - 删除远程分支：`git push 远程仓库名称 --delete 远程分支名称`
+
+    - 查看远程地址：`git remote -v`
+
     ```
     git push -u origin master
     ```
@@ -1111,28 +1232,32 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
 
     使用`https`除了速度慢以外，还有个最大的麻烦是每次推送都必须输入口令，但是在某些只开放http端口的公司内部就无法使用`ssh`协议而只能用`https`。
 
-- ### 分支管理
+- ### 分支管理(多人协作)
+
+  - 仓库创建时默认有master主分支
+
+  - 一般不允许程序员在master直接修改，通过创建功能分支完成后合并到master
 
   - Git鼓励大量使用分支
 
-  - 查看分支：`git branch`
+  - 查看分支：`git branch`(*代表所处分支)
 
-    创建分支：`git branch `
+    创建分支：`git branch 分支名称 ` (基于当前分支，创建一个新的分支，创建后仍处于当前分支)
 
-    切换分支：`git checkout `或者`git switch `
+    切换分支：`git checkout 分支名称`或者`git switch 分支名称 `
 
-    创建+切换分支：`git checkout -b `或者`git switch -c `
+    创建并切换分支(常用)：`git checkout -b 分支名称  `或者`git switch -c 分支名称`
 
-    合并某分支到当前分支：`git merge `
+    合并某分支到当前分支：`git merge 某分支名称 `
 
-    删除分支：`git branch -d `
+    删除分支：`git branch -d 分支名称`(不处于删除的分支上)
 
-  - 新的switch
+- 新的switch
 
-    -  创建并切换到新的`dev`分支，可以使用： 
+  -  创建并切换到新的`dev`分支，可以使用： 
     - `git switch -c dev`
 
-  -  直接切换到已有的`master`分支，可以使用： 
+  - 直接切换到已有的`master`分支，可以使用： 
 
     - `git switch master`
 
@@ -1141,6 +1266,8 @@ app.listen(3000, function() { console.log("Server started on port 3000.") });
   - 分支管理策略： 准备合并`dev`分支，请注意`--no-ff`参数，表示禁用`Fast forward`： 
 
     - `git merge --no-ff -m "merge with no-ff" dev`
+
+  - 分支冲突：程序员打开文件手动解决代码，然后再重新提交commit
 
 ### 小结
 
@@ -1160,7 +1287,7 @@ https://www.cnblogs.com/feigao/p/8717520.html
 
 ### 简介： cmder是一个增强型命令行工具，不仅可以使用windows下的所有命令，更爽的是可以使用linux的命令,shell命令。 
 
-### 下载： 官网地址：http://cmder.net/ 
+### 下载： 官网地址：http://cmder.net/ 官网没用就：https://www.onlinedown.net/soft/10052781.htm
 
 下载的时候，会有两个版本，分别是mini与full版；唯一的差别在于有没有内建msysgit工具，这是Git for Windows的标准配备；全安装版 cmder 自带了 msysgit, 压缩包 23M, 除了 git 本身这个命令之外, 里面可以使用大量的 linux 命令；比如 grep, curl(没有 wget)； 像vim, grep, tar, unzip, ssh, ls, bash, perl 对于爱折腾的Coder更是痛点需求。
 
@@ -1654,3 +1781,227 @@ module.exports = (env)=>{
     clear:both;
     }
 ```
+
+# IDE
+
+## 1.VS code
+
+推荐安装插件：
+
+| 插件                                          | 作用                                        |
+| :-------------------------------------------- | ------------------------------------------- |
+| Chinese (Simplified) Language Pack for VS Cod | 中文（简体）语言包                          |
+| Open in Browser                               | 右击选择浏览器打开html文件                  |
+| JS-CSS-HTML Formatter                         | 每次保存，都会自动格式化js  css 和html 代码 |
+| Auto Rename Tag                               | 自动重命名配对的HTML / XML标签              |
+| CSS Peek                                      | 追踪至样式                                  |
+| vscode-icons                                  | 根据文件文件夹显示不同的图标                |
+| Preview on Web Server                         | 保存文件自动刷新浏览器                      |
+| Live Server                                   | http协议                                    |
+
+## 双飞翼与圣杯布局
+
+双飞翼最早由淘宝提出，优化了圣杯布局开启定位的问题。双飞翼套了一层div，简化了圣杯的定位代码，不同点：圣杯在父元素parent留白，双飞翼在子元素inner留白
+
+#### 双飞翼
+
+- 第一步：利用浮动让三个列横向排列
+- 第二步：把center挤压
+- 第三步：位置的移动，直接移动左右边
+
+```html
+html结构:
+<div class="container">
+    <div class="center">
+        <div class="inner"></div>
+    </div>
+    <div class="left"></div>
+    <div class="right"></div>
+</div>
+css代码:
+<style>
+    *{
+        padding:0;
+        margin:0;
+    }
+    .center{
+        width:100%;
+    }
+    .left,
+    .right,
+    .center{
+        height:800px;
+        /*第一步：利用浮动让三个列横向排列*/
+        float:left;
+    }
+    .left,
+    .right{
+    	width:300px;    
+    }
+    .left{
+        /*第三步：位置的移动，移动左边*/
+        margin-left:-100%;
+        background-color:red;
+    }
+    .right{
+        
+        margin-left:-300px;
+        background-color:black;
+    }
+    .inner{
+        height:800px;
+        background-color:blue;
+        /*第二步：把center挤压*/
+        /*给left留出空间*/
+        margin-left:300px;
+        /*给right留出空间*/
+        margin-right:300px;
+    }
+</style>
+```
+
+#### 圣杯布局
+
+```html
+html代码：
+<div class="container">
+    <div class="content"></div>
+    <div class="left"></div>
+    <div class="right"></div>
+</div>
+
+css代码：
+<style>
+    *{
+        padding:0;
+        margin:0;
+    }
+    .container{
+        /*第二步：使用父容器给左右留白*/
+        margin:0 300px;
+    }
+    .content,
+    .left,
+    .right{
+        height:800px;
+        /*第一步：三个盒子浮动横向排列*/
+        float:left;
+    }
+    .content{
+        width:100%;
+        background-color:red;
+    }
+    .left{
+        width:300px;
+        /*第三步：使用负margin与定位移动左盒子*/
+        margin-left:-100%;
+        background-color:black;
+        position: relative;
+        left: -300px;
+    }
+    .right{
+        width:300px;
+        /*第三步：使用负margin与定位移动右盒子*/
+        margin-left:-300px;
+        background-color:green;
+        position: relative;
+        right: -300px;
+    }
+
+</style>
+
+
+
+
+
+```
+
+# maven
+
+#### 一、安装
+
+1. 下载地址：https://archive.apache.org/dist/maven/maven-3/ 版本用的3.6.3--2019
+2. 解压到没有中文空格的路径
+3. maven依赖java环境，所以要确保java环境已配置好 （maven-3.3+ 需要jdk7+）maven本身有2个环境变量要配置：
+
+```
+`MAVEN_HOME = maven的安装目录`
+`PATH = maven的安装目录下的bin目录`
+```
+
+1. 测试
+
+   ```
+   查看maven版本号
+   mvn -v
+   ```
+
+#### 二、maven配置
+
+1. 本地仓库
+
+   maven的conf目录中有 [settings.xml](https://blog.csdn.net/zhouzhou992/article/details/111177063) ，是maven的配置文件，做如下配置：
+
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 			  	http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <!-- localRepository
+   | The path to the local repository maven will use to store artifacts.
+   |
+   | Default: ${user.home}/.m2/repository
+  <localRepository>/path/to/local/repo</localRepository>
+  -->
+  <!-- 选择一个磁盘目录，作为本地仓库 -->
+  <localRepository>D:\Program Files\maven\myrepository</localRepository>
+```
+
+2. JDK配置
+
+   ```xml
+   <profiles>
+       <!-- 在已有的profiles标签中添加profile标签 -->
+   	<profile>    
+           <id>myjdk</id>    
+           <activation>    
+               <activeByDefault>true</activeByDefault>    
+               <jdk>1.8</jdk>    
+           </activation>    
+           <properties>    
+               <maven.compiler.source>1.8</maven.compiler.source>    
+               <maven.compiler.target>1.8</maven.compiler.target>
+               <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion> 
+           </properties>    
+       </profile>
+   </profiles>
+   <!-- 让增加的 profile生效 -->
+   <activeProfiles>
+       <activeProfile>myjdk</activeProfile>
+   </activeProfiles>
+   ```
+
+3. 镜像远程仓库配置
+
+   - 除中央仓库之外，还有其他远程仓库。
+     比如aliyun仓库（http://maven.aliyun.com/nexus/content/groups/public/）
+   - 中央仓库在国外，下载依赖速度过慢，所以都会配置一个国内的公共仓库替代中央仓库。
+
+   ```xml
+   <!--setting.xml中添加如下配置-->
+   <mirrors>
+   	<mirror>
+           <id>aliyun</id>  
+           <!-- 中心仓库的 mirror(镜像) -->
+           <mirrorOf>central</mirrorOf>    
+           <name>Nexus aliyun</name>
+           <!-- aliyun仓库地址 以后所有要指向中心仓库的请求，都会指向aliyun仓库-->
+           <url>http://maven.aliyun.com/nexus/content/groups/public</url>  
+       </mirror>
+   </mirrors>
+   ```
+
+   
+
+
+
+安卓手机qq文件存储路径：Android/data/com.tencent.mobileqq/Tencent/QQfile_recv
